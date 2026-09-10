@@ -1,0 +1,315 @@
+:root {
+  color-scheme: light;
+  --sky-top: #bfe9ff;
+  --sky-bottom: #eaf9ff;
+  --ink: #1c3a4a;
+  --card-bg: rgba(255, 255, 255, 0.92);
+  --accent: #2fb6d9;
+  --accent-dark: #1b8fae;
+  --gold: #ffb703;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 70%, #d8f3dc 100%);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ---------- HUD ---------- */
+#hud {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+  flex-wrap: wrap;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 70px;
+}
+
+.hud-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.65;
+}
+
+.hud-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.duck-meter-wrap {
+  flex: 1 1 160px;
+  max-width: 320px;
+}
+
+.duck-meter {
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.duck-meter-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold), #ffd166);
+  transition: width 0.35s ease;
+}
+
+.hud-button {
+  margin-left: auto;
+  border: none;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.hud-button:hover {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- Game area ---------- */
+#game {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+#bubbleLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -90px;
+  width: 64px;
+  height: 64px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  animation-name: float-up, sway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: 1, infinite;
+  will-change: transform, bottom;
+}
+
+.bubble img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+  transition: transform 0.15s ease;
+}
+
+.bubble:hover img {
+  transform: scale(1.06);
+}
+
+@keyframes float-up {
+  from { bottom: -90px; }
+  to { bottom: 108%; }
+}
+
+@keyframes sway {
+  0%, 100% { margin-left: -14px; }
+  50% { margin-left: 14px; }
+}
+
+.bubble.popping {
+  animation: pop-anim 0.35s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes pop-anim {
+  0% { transform: scale(1); opacity: 1; }
+  60% { transform: scale(1.35); opacity: 0.9; }
+  100% { transform: scale(0.2); opacity: 0; }
+}
+
+.bubble.duck-reveal {
+  animation: duck-anim 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes duck-anim {
+  0% { transform: scale(1) rotate(0deg); }
+  35% { transform: scale(1.7) rotate(-8deg); }
+  55% { transform: scale(1.5) rotate(6deg); }
+  100% { transform: scale(1.9) rotate(0deg) translateY(-30px); opacity: 0; }
+}
+
+.bubble.goose-reveal {
+  animation: goose-anim 0.7s ease forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes goose-anim {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.3) rotate(-6deg); }
+  100% { transform: scale(1.4) rotate(4deg) translateY(-20px); opacity: 0; }
+}
+
+/* floating score / message toasts */
+#toastLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.toast {
+  position: absolute;
+  transform: translate(-50%, 0);
+  font-weight: 700;
+  white-space: nowrap;
+  animation: toast-rise 1.1s ease forwards;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.toast.normal { color: var(--accent-dark); font-size: 16px; }
+.toast.duck { color: #e07b00; font-size: 22px; }
+.toast.goose { color: #4a5a3a; font-size: 16px; }
+
+@keyframes toast-rise {
+  0% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -60px); }
+}
+
+/* big banner when a duck appears */
+#duckBanner {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20px);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 14px 22px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 18px;
+  color: #e07b00;
+  opacity: 0;
+  pointer-events: none;
+  animation: banner-pop 2.2s ease forwards;
+  z-index: 30;
+}
+
+#duckBanner img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+@keyframes banner-pop {
+  0% { opacity: 0; transform: translate(-50%, -10px) scale(0.8); }
+  12% { opacity: 1; transform: translate(-50%, 0) scale(1.05); }
+  20% { transform: translate(-50%, 0) scale(1); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -10px) scale(0.95); }
+}
+
+/* ---------- Overlay ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 50, 60, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 16px;
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.overlay-card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 28px 26px;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.overlay-duck {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.overlay-card h1 {
+  margin: 6px 0 10px;
+  font-size: 22px;
+}
+
+.overlay-card p {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.primary-button {
+  margin-top: 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.primary-button:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .hud-item { min-width: 56px; }
+  .hud-value { font-size: 16px; }
+  .bubble { width: 52px; height: 52px; }
+}
