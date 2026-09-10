@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bubble Pop Surprise Duck</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header id="hud">
+    <div class="hud-item">
+      <span class="hud-label">Score</span>
+      <span id="score" class="hud-value">0</span>
+    </div>
+    <div class="hud-item duck-meter-wrap">
+      <span class="hud-label">Duck-o-Meter</span>
+      <div class="duck-meter">
+        <div id="duckMeterFill" class="duck-meter-fill"></div>
+      </div>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">Ducks Found</span>
+      <span id="duckCount" class="hud-value">0</span>
+    </div>
+    <button id="soundToggle" class="hud-button" aria-pressed="true" title="Toggle sound">🔊</button>
+  </header>
+
+  <main id="game">
+    <div id="bubbleLayer"></div>
+    <div id="toastLayer"></div>
+  </main>
+
+  <div id="introOverlay" class="overlay">
+    <div class="overlay-card">
+      <img class="overlay-duck" src="images/surprise_duck.png" alt="Surprise duck" />
+      <h1>Bubble Pop Surprise Duck</h1>
+      <p>Pop bubbles together on the same screen. Every pop fills the shared
+        Duck-o-Meter — fill it up and a <strong>Surprise Duck</strong> appears!
+        Watch out, sometimes it's just a goose. 🦅</p>
+      <button id="startButton" class="primary-button">Start Popping</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
